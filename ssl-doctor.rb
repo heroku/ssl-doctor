@@ -74,6 +74,29 @@ post "/info-for-certificate-bundle" do
   raise NotImplementedError
 end
 
+DOCS = DATA.read
 get "/" do
-  "OH HAI"
+  content_type :text
+  DOCS
 end
+
+__END__
+Always POST plain/text to the endpoints.
+
+E.g.:
+  curl -X POST --data-binary @pem-file https://hostname/resolve-chain
+
+
+# Endpoints that respond with plaintext:
+
+/order-chain                      -> one or more certificates
+/resolve-chain                    -> one or more certificates
+/find-domain-certificate-from-set -> a certificate
+/find-key-for-certificate         -> one key
+
+- order-chain only orders the posted certificates.
+- resolve-chain will complete the chain with intermediates on file.
+
+# Endpoints that respond with json:
+
+/resolve-chain-and-key            -> { "pem":"...", "key":"..." }
