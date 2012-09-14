@@ -3,11 +3,16 @@
 
 require 'sinatra'
 require 'rack/ssl'
+require 'thin'
 require 'ssltool'
 require 'sequel'
 require 'json'
 
 use Rack::SSL if ENV['RACK_ENV'] == 'production'
+
+# Thin doesn't know about HTTP 422, but Rack does, so let's patch thin's list.
+# Revisit this for future removal when https://github.com/macournoyer/thin/pull/135 gets merged in
+Thin::HTTP_STATUS_CODES.replace(Rack::Utils::HTTP_STATUS_CODES)
 
 $store = SSLTool::CertificateStore.new ENV['DATABASE_URL']
 def resolve_chain(chain_string = request.body.read)
