@@ -9,6 +9,7 @@ require 'sequel'
 require 'json'
 
 use Rack::SSL if ENV['RACK_ENV'] == 'production'
+set :show_exceptions, false
 
 # Thin doesn't know about HTTP 422, but Rack does, so let's patch thin's list.
 # Revisit this for future removal when https://github.com/macournoyer/thin/pull/135 gets merged in
