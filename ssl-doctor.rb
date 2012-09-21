@@ -17,7 +17,7 @@ $stdout.sync = true
 Thin::HTTP_STATUS_CODES.replace(Rack::Utils::HTTP_STATUS_CODES)
 
 STORE = SSLTool::CertificateStore.new ENV['DATABASE_URL']
-STORE.register_for_circular_chain_detection_notification do |circular_chains|
+STORE.on_circular_chain_detection do |circular_chains|
   raise NotImplementedError
 end
 
