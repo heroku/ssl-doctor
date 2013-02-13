@@ -6,7 +6,7 @@ require 'rack/ssl'
 require 'thin'
 require 'ssltool'
 require 'sequel'
-require 'json'
+require 'yajl'
 
 use Rack::SSL if ENV['RACK_ENV'] == 'production'
 set :show_exceptions, false
@@ -31,7 +31,7 @@ end
 def respond(data)
   case
   when data.respond_to?(:to_pem); content_type :text; data.to_pem
-  when data.is_a?(Hash)         ; content_type :json; data.to_json
+  when data.is_a?(Hash)         ; content_type :json; Yajl::Encoder.encode(data)
   else raise ArgumentError
   end
 end
