@@ -21,8 +21,9 @@ STORE.on_circular_chain_detection do |circular_chains|
   raise NotImplementedError
 end
 
-[ [SSLTool::KeyHelper::KeyNotPresentError,                     400, "No keys given."],
+[ [SSLTool::KeyHelper::KeyNotPresentError,                     400, "No valid, non-passphrase-protected keys given."],
   [SSLTool::KeyHelper::KeyNotFoundError,                       422, "No key found that signs the certificate."],
+  [SSLTool::KeyHelper::KeyMalformedError,                      422, "Key appears to be malformed, or is passphrase-protected."],
   [SSLTool::ChainResolution::ZeroCertsChainResolutionError,    400, "No certificate given."],
   [SSLTool::ChainResolution::ZeroHeadsChainResolutionError,    422, "No certificate given is a domain name certificate."],
   [SSLTool::ChainResolution::TooManyHeadsChainResolutionError, 422, "More than one domain name certificate given."],
