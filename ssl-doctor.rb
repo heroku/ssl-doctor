@@ -13,7 +13,6 @@ set :show_exceptions, false
 $stdout.sync = true
 
 # Thin doesn't know about HTTP 422, but Rack does, so let's patch thin's list.
-# Revisit this for future removal when https://github.com/macournoyer/thin/pull/135 gets merged in
 Thin::HTTP_STATUS_CODES.replace(Rack::Utils::HTTP_STATUS_CODES)
 
 STORE = SSLTool::CertificateStore.new ENV['DATABASE_URL']
