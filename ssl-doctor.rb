@@ -7,6 +7,8 @@ require 'ssltool'
 require 'sequel'
 require 'yajl'
 
+require_relative "cfssl-wrapper"
+
 use Rack::SSL if ENV['RACK_ENV'] == 'production'
 set :show_exceptions, false
 $stdout.sync = true
@@ -57,10 +59,19 @@ post "/order-chain" do
 end
 
 post "/resolve-chain" do
-  respond_with_resolved_chain
+  CFSSL.bundle STORE.resolve_chain(request.body.read)
 end
 
 post "/resolve-chain-and-key" do
+  chain, key = resolve_chain_and_key
+  respond pem:CFSSL.bundle(chain), key:key.to_pem
+end
+
+post "/resolve-chain-ssltool" do
+  respond_with_resolved_chain
+end
+
+post "/resolve-chain-and-key-ssltool" do
   chain, key = resolve_chain_and_key
   respond pem:chain.to_pem, key:key.to_pem
 end
@@ -100,3 +111,10 @@ E.g.:
 # Endpoints that respond with json:
 
 /resolve-chain-and-key            -> { "pem":"...", "key":"..." }
+
+# cfssl vs ssltool
+
+/resolve-chain and /resolve-chain-and-key now use cfssl for chain resolution.
+
+for the original ssltool chain resolution use /resolve-chain-ssltool
+and /resolve-chain-and-key-ssltool instead
