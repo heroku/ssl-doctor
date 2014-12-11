@@ -1,0 +1,31 @@
+#!/usr/bin/env bash -e +x
+
+### Requirements
+
+# brew install go  # (or whatever you do for your OS)
+# go get github.com/mitchellh/gox
+
+hash go  &>/dev/null                  || (echo "go binary not present or not in PATH";  exit 1)
+hash gox &>/dev/null                  || (echo "gox binary not present or not in PATH"; exit 1)
+hash git &>/dev/null                  || (echo "git binary not present or not in PATH"; exit 1)
+[ -z "`git status vendor/cfssl -s`" ] || (echo "vendor/cfssl has uncommited changes";   exit 1)
+
+rm -rf tmp vendor/cfssl
+mkdir -p vendor/cfssl/bin tmp/go
+export GOPATH=`pwd`/tmp/go
+url=github.com/cloudflare/cfssl
+go get -d $url
+gox \
+  -osarch "`go env GOHOSTOS`/`go env GOHOSTARCH` linux/amd64" \
+  -output="vendor/cfssl/bin/{{.Dir}}.{{.OS}}_{{.Arch}}" \
+  github.com/cloudflare/cfssl
+
+cp $GOPATH/src/github.com/cloudflare/cfssl/LICENSE vendor/cfssl/
+
+if [ -n "`git status vendor/cfssl -s`" ]; then
+  commit=$( GIT_DIR=$GOPATH/src/github.com/cloudflare/cfssl/.git git log -n1 --format=%H )
+  git add vendor/cfssl
+  git commit -q -m "Add cfssl binaries compiled from $url at commit $commit"
+fi
+
+rm -rf tmp

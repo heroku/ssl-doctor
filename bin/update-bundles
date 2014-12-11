@@ -1,0 +1,19 @@
+#!/usr/bin/env bash -e +x
+
+hash git &>/dev/null                        || (echo "git binary not present or not in PATH";     exit 1)
+[ -z "`git status vendor/cfssl_trust -s`" ] || (echo "vendor/cfssl_trust has uncommited changes"; exit 1)
+
+mkdir -p vendor
+url=https://github.com/cloudflare/cfssl_trust
+git clone  -q --progress $url vendor/cfssl_trust.new
+
+commit=$( GIT_DIR=vendor/cfssl_trust.new/.git git log -n1 --format=%H )
+rm -rf vendor/cfssl_trust.new/.git
+[ -d vendor/cfssl_trust ] && mv vendor/cfssl_trust vendor/cfssl_trust.old
+mv vendor/cfssl_trust.new vendor/cfssl_trust
+if [ -n "`git status vendor/cfssl_trust -s`" ]; then
+  git add -A vendor/cfssl_trust
+  git commit -q -m "Added $url at commit $commit"
+fi
+
+rm -rf vendor/cfssl_trust.old
