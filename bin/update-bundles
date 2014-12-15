@@ -8,7 +8,7 @@ url=https://github.com/cloudflare/cfssl_trust
 git clone  -q --progress $url vendor/cfssl_trust.new
 
 commit=$( GIT_DIR=vendor/cfssl_trust.new/.git git log -n1 --format=%H )
-rm -rf vendor/cfssl_trust.new/.git
+rm -rf vendor/cfssl_trust.new/{.git,trusted_roots,intermediate_ca}
 [ -d vendor/cfssl_trust ] && mv vendor/cfssl_trust vendor/cfssl_trust.old
 mv vendor/cfssl_trust.new vendor/cfssl_trust
 if [ -n "`git status vendor/cfssl_trust -s`" ]; then
