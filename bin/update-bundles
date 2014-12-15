@@ -13,7 +13,7 @@ rm -rf vendor/cfssl_trust.new/{.git,trusted_roots,intermediate_ca}
 mv vendor/cfssl_trust.new vendor/cfssl_trust
 if [ -n "`git status vendor/cfssl_trust -s`" ]; then
   git add -A vendor/cfssl_trust
-  git commit -q -m "Added $url at commit $commit"
+  git commit -q -m "Added cfssl_trust bundle files from $url at commit $commit"
 fi
 
 rm -rf vendor/cfssl_trust.old
