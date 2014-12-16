@@ -9,6 +9,10 @@ require 'yajl'
 
 require_relative "lib/cfssl-wrapper"
 
+# when running on a dyno, make sure we keep pulling the up-to-date trust bundles from redis
+load(File.expand_path("lib/cfssl-trust-store-background-refresher.rb"), true) if ENV["REFRESH_CFSSL_TRUST"]
+
+
 use Rack::SSL if ENV['RACK_ENV'] == 'production'
 set :show_exceptions, false
 $stdout.sync = true
