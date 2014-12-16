@@ -4,7 +4,7 @@ require "yajl"
 require "shellwords"
 
 module CFSSL
-  ROOT  = File.expand_path(File.dirname(__FILE__))
+  ROOT  = File.expand_path(File.dirname(__FILE__) + "/..")
   CFSSL = "#{ROOT}/vendor/cfssl/bin"
   TRUST = "#{ROOT}/vendor/cfssl_trust"
   CA    = "#{TRUST}/ca-bundle.crt"

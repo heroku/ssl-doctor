@@ -7,7 +7,7 @@ require 'ssltool'
 require 'sequel'
 require 'yajl'
 
-require_relative "cfssl-wrapper"
+require_relative "lib/cfssl-wrapper"
 
 use Rack::SSL if ENV['RACK_ENV'] == 'production'
 set :show_exceptions, false
