@@ -21,7 +21,7 @@ As long as the `cfssl-trust-store-*` mentioned below are in operation, this does
 
 Maintains a separate clone of the cfssl_trust repository. When run, it'll either create that clone or update it. It'll then store the bundle files in a redis instance.
 
-This should be run periodically. On heroku it should be set as a scheduler process running daily.
+This should be run periodically. On heroku it should be set as a scheduler process running daily. (Which sadly loses the cached clone, but such is life…)
 
 ### `bin/cfssl-trust-store-get`
 
