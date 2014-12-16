@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+require_relative "../lib/cfssl-trust-store-preamble"
+
+CFSSL_TRUST_TARGET_DIR = CFSSL_TRUST_DIR.sub(/\.git$/, '')
+
+# write bundles from cache to local files used by the cfssl tool
+TRUST_FILENAMES.each do |filename|
+  filepath = File.join CFSSL_TRUST_TARGET_DIR, filename
+  contents = TRUST_STORE.get(filename) or raise "Key not present: #{filename}"
+  File.write(filepath, contents)
+end

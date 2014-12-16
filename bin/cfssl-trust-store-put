@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+require_relative "../lib/cfssl-trust-store-preamble"
+
+# clone cfssl_trust repo if not present
+if not File.directory?(CFSSL_TRUST_DIR)
+  system "git", "clone", "-q", CFSSL_TRUST_URL, CFSSL_TRUST_DIR or raise "clone failed"
+end
+
+# get repo up-to-date
+Dir.chdir(CFSSL_TRUST_DIR)
+system "git pull -q" or raise "pull failed"
+
+
+# update the cached bundle files
+TRUST_FILENAMES.each do |filename|
+  filepath = File.join CFSSL_TRUST_DIR, filename
+  # ensure things are more or less ok, in case the cfssl_trust file layout ever changes
+  File.exists?(filepath) or raise "#{filename} doesn't exist"
+  !File.zero?(filepath)  or raise "#{filename} exists but is empty"
+  # put it in there
+  TRUST_STORE.set(filename, File.read(filepath))
+end
