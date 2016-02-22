@@ -6,11 +6,26 @@ require 'rack/ssl'
 require 'puma'
 require 'ssltool'
 require 'sequel'
+require 'pg'
 require 'yajl'
 require 'rollbar'
 require 'rollbar/middleware/sinatra'
 require 'sucker_punch'
 require 'rollbar/blanket'
+
+
+module PGAsyncExecWithScornTowardsOpenSSL
+  def async_exec *a, &b
+    retried ||= false
+    super *a, &b
+  rescue PG::ConnectionBad => e
+    raise e if retried
+    OpenSSL.errors
+    retried = true
+    retry
+  end
+end
+PG::Connection.prepend PGAsyncExecWithScornTowardsOpenSSL
 
 
 Rollbar.configure do |config|
