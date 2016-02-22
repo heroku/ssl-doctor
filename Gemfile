@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 ruby '2.3.0'
 
-gem 'thin'
+gem 'puma'
 gem 'rack-ssl'
 gem 'sinatra'
 gem 'ssltool'

@@ -3,7 +3,7 @@
 require 'bundler/setup'
 require 'sinatra'
 require 'rack/ssl'
-require 'thin'
+require 'puma'
 require 'ssltool'
 require 'sequel'
 require 'yajl'
@@ -13,8 +13,6 @@ use Rack::SSL if ENV['RACK_ENV'] == 'production'
 set :show_exceptions, false
 $stdout.sync = true
 
-# Thin doesn't know about HTTP 422, but Rack does, so let's patch thin's list.
-Thin::HTTP_STATUS_CODES.replace(Rack::Utils::HTTP_STATUS_CODES)
 
 STORE = SSLTool::CertificateStore.new ENV['DATABASE_URL']
 STORE.on_circular_chain_detection do |circular_chains|
