@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'bundler/setup'
 require 'sinatra'
 require 'rack/ssl'
 require 'thin'
