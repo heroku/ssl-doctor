@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-ruby '2.1.5'
+ruby '2.3.0'
 
 gem 'thin'
 gem 'rack-ssl'
