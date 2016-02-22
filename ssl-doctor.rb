@@ -49,7 +49,7 @@ def respond(data)
   end
 end
 
-def respond_with_resolved_chain(component = nil)
+def respond_with_resolved_chain(component = :recommended_chain)
   response = STORE.resolve_chain(request.body.read)
   response = response.send(component) if component
   respond response
