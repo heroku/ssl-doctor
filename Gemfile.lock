@@ -1,25 +1,28 @@
 GEM
   remote: https://rubygems.org/
+  remote: https://heroku-internal-gems.s3.amazonaws.com/8d2d5c8749fb3b45ecfaa330ef5fbc7dea15a0d59383016d/
   specs:
-    daemons (1.2.3)
-    eventmachine (1.0.9.1)
+    concurrent-ruby (1.0.0)
+    multi_json (1.11.2)
     pg (0.18.4)
+    puma (2.16.0)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
     rack-ssl (1.4.1)
       rack
     redis (3.2.2)
+    rollbar (2.8.0)
+      multi_json
+    rollbar-blanket (0.1.2)
     sequel (4.31.0)
     sinatra (1.4.7)
       rack (~> 1.5)
       rack-protection (~> 1.4)
       tilt (>= 1.3, < 3)
     ssltool (0.0.13)
-    thin (1.6.4)
-      daemons (~> 1.0, >= 1.0.9)
-      eventmachine (~> 1.0, >= 1.0.4)
-      rack (~> 1.0)
+    sucker_punch (2.0.1)
+      concurrent-ruby (~> 1.0.0)
     tilt (2.0.2)
     yajl-ruby (1.2.1)
 
@@ -28,12 +31,15 @@ PLATFORMS
 
 DEPENDENCIES
   pg
+  puma
   rack-ssl
   redis
+  rollbar
+  rollbar-blanket!
   sequel
   sinatra
   ssltool
-  thin
+  sucker_punch
   yajl-ruby
 
 BUNDLED WITH

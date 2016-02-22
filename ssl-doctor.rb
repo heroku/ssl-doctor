@@ -7,6 +7,20 @@ require 'puma'
 require 'ssltool'
 require 'sequel'
 require 'yajl'
+require 'rollbar'
+require 'rollbar/middleware/sinatra'
+require 'sucker_punch'
+require 'rollbar/blanket'
+
+
+Rollbar.configure do |config|
+  config.access_token = ENV['ROLLBAR_ACCESS_TOKEN']
+  config.disable_monkey_patch = true
+  config.use_sucker_punch
+  config.scrub_fields  |= Rollbar::Blanket.fields
+  config.scrub_headers |= Rollbar::Blanket.headers
+end
+use Rollbar::Middleware::Sinatra if ENV['ROLLBAR_ACCESS_TOKEN']
 
 
 use Rack::SSL if ENV['RACK_ENV'] == 'production'
