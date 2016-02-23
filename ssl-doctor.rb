@@ -32,6 +32,7 @@ Rollbar.configure do |config|
   config.disable_monkey_patch = true
   config.environment = Sinatra::Base.environment
   config.use_thread
+  config.exception_level_filters["SSLTool::Error"] = "ignore"
   config.scrub_fields  |= Rollbar::Blanket.fields
   config.scrub_headers |= Rollbar::Blanket.headers
 end
