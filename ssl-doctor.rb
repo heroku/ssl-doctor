@@ -8,36 +8,9 @@ require 'ssltool'
 require 'sequel'
 require 'pg'
 require 'yajl'
-require 'rollbar'
-require 'rollbar/middleware/sinatra'
-require 'rollbar/blanket'
 
-
-module PGAsyncExecWithScornTowardsOpenSSL
-  def async_exec *a, &b
-    retried ||= false
-    super *a, &b
-  rescue PG::ConnectionBad => e
-    raise e if retried
-    OpenSSL.errors
-    retried = true
-    retry
-  end
-end
-PG::Connection.prepend PGAsyncExecWithScornTowardsOpenSSL
-
-
-Rollbar.configure do |config|
-  config.access_token = ENV['ROLLBAR_ACCESS_TOKEN']
-  config.disable_monkey_patch = true
-  config.environment = Sinatra::Base.environment
-  config.use_thread
-  config.exception_level_filters["SSLTool::Error"] = "ignore"
-  config.scrub_fields  |= Rollbar::Blanket.fields
-  config.scrub_headers |= Rollbar::Blanket.headers
-end
-use Rollbar::Middleware::Sinatra if ENV['ROLLBAR_ACCESS_TOKEN']
-
+require_relative "config/pg-openssl-fix"
+require_relative "config/rollbar"
 
 use Rack::SSL if ENV['RACK_ENV'] == 'production'
 set :show_exceptions, false
