@@ -10,8 +10,8 @@ require 'pg'
 require 'yajl'
 require 'rollbar'
 require 'rollbar/middleware/sinatra'
+ require 'rollbar/blanket'
 require 'sucker_punch'
-require 'rollbar/blanket'
 
 
 module PGAsyncExecWithScornTowardsOpenSSL
@@ -31,7 +31,9 @@ PG::Connection.prepend PGAsyncExecWithScornTowardsOpenSSL
 Rollbar.configure do |config|
   config.access_token = ENV['ROLLBAR_ACCESS_TOKEN']
   config.disable_monkey_patch = true
+  config.environment = Sinatra::Base.environment
   config.use_sucker_punch
+  config.failover_handlers = [Rollbar::Delay::Thread]
   config.scrub_fields  |= Rollbar::Blanket.fields
   config.scrub_headers |= Rollbar::Blanket.headers
 end
@@ -107,6 +109,10 @@ DOCS = DATA.read
 get "/" do
   content_type :text
   DOCS
+end
+
+get '/health/verify-rollbar' do
+  raise Time.now.inspect
 end
 
 __END__
