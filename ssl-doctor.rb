@@ -38,7 +38,7 @@ def respond(data)
   end
 end
 
-def resolve_chain(bundle, component)
+def resolve_chain(bundle, component = :recommended_chain)
   STORE.resolve_chain(bundle).send(component)
 end
 
