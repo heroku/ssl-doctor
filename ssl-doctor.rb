@@ -38,15 +38,17 @@ def respond(data)
   end
 end
 
+def resolve_chain(bundle, component)
+  STORE.resolve_chain(bundle).send(component)
+end
+
 def respond_with_resolved_chain(component = :recommended_chain)
-  response = STORE.resolve_chain(request.body.read)
-  response = response.send(component) if component
-  respond response
+  respond resolve_chain(request.body.read, component)
 end
 
 def resolve_chain_and_key
   scan  = SSLTool::PEMScanner.scan(request.body.read)
-  chain = STORE.resolve_chain(scan.certs)
+  chain = resolve_chain(scan.certs)
   key   = SSLTool::KeyHelper.find_private_key_for_certificate!(chain.first, scan.keys)
   [chain, key]
 end
