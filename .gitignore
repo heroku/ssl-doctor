@@ -1,2 +1,3 @@
 .env
 vendor/cfssl_trust.git
+.bundle/config
