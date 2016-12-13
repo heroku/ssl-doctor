@@ -9,8 +9,8 @@ require 'sequel'
 require 'pg'
 require 'yajl'
 
-require_relative "config/pg-openssl-fix"
-require_relative "config/rollbar"
+require_relative "../config/pg-openssl-fix"
+require_relative "../config/rollbar"
 
 use Rack::SSL if ENV['RACK_ENV'] == 'production'
 set :show_exceptions, false
@@ -79,17 +79,11 @@ post "/info-for-certificate-bundle" do
   raise NotImplementedError
 end
 
-DOCS = DATA.read
-get "/" do
-  content_type :text
-  DOCS
-end
-
 get '/health/verify-rollbar' do
   raise Time.now.inspect
 end
 
-__END__
+DOCS = <<END
 Always POST plain/text to the endpoints.
 
 E.g.:
@@ -109,3 +103,10 @@ E.g.:
 # Endpoints that respond with json:
 
 /resolve-chain-and-key            -> { "pem":"...", "key":"..." }
+
+END
+
+get "/" do
+  content_type :text
+  DOCS
+end

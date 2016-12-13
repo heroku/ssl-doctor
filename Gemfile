@@ -12,3 +12,8 @@ gem 'sequel'
 gem 'pg'
 gem 'yajl-ruby'
 gem 'redis'
+
+group :test do
+    gem 'rack-test'
+    gem 'rspec'
+end

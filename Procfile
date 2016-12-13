@@ -1,1 +1,1 @@
-web: bundle exec ruby ssl-doctor.rb -p $PORT
+web: bundle exec ruby lib/ssl-doctor.rb -p $PORT
