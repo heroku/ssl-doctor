@@ -6,4 +6,4 @@ TRUST_FILENAMES = %w[ ca-bundle.crt
                       ca-bundle.crt.metadata
                       int-bundle.crt ]
 
-TRUST_STORE = Redis.connect url:ENV["REDISCLOUD_URL"]
+TRUST_STORE = Redis.connect url:ENV["REDIS_URL"]

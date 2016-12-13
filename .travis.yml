@@ -1,0 +1,17 @@
+language: ruby
+rvm:
+  - 2.3.0
+services:
+  - postgresql
+  - redis
+cache:
+  - bundler
+install: bundle install --with test --jobs=3 --retry=3
+before_script:
+  - psql -c 'create database ssl_dr_test;' -U postgres
+env:
+  global:
+    - RACK_ENV=development
+    - DATABASE_URL=postgres://localhost/ssl_dr_test
+    - REDIS_URL=redis://:@127.0.0.1:6379/1
+script: bundle exec rspec
