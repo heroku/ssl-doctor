@@ -10,7 +10,34 @@
     }
   },
   "buildpacks": [
-    {"url": "https://github.com/heroku/heroku-buildpack-redis.git"},
-    {"url": "https://github.com/heroku/heroku-buildpack-ruby.git"}
-  ]
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-redis.git"
+    },
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-ruby.git"
+    }
+  ],
+  "environments": {
+    "test": {
+      "buildpacks": [
+        {
+          "url": "https://github.com/heroku/heroku-buildpack-redis.git"
+        },
+        {
+          "url": "https://github.com/heroku/heroku-buildpack-ruby.git"
+        },
+        {
+          "url": "https://github.com/heroku/heroku-buildpack-addon-wait.git"
+        }
+      ],
+      "addons": [
+        "heroku-postgresql",
+        "heroku-redis"
+      ],
+      "scripts": {
+        "test-setup": "bundle install --with test && bin/addon-wait",
+        "test": "bundle exec rspec"
+      }
+    }
+  }
 }
