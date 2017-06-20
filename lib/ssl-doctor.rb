@@ -2,6 +2,7 @@
 
 require 'bundler/setup'
 require 'sinatra'
+require 'sinatra/cross_origin'
 require 'rack/ssl'
 require 'puma'
 require 'ssltool'
@@ -14,8 +15,8 @@ require_relative "../config/rollbar"
 
 use Rack::SSL if ENV['RACK_ENV'] == 'production'
 set :show_exceptions, false
+enable :cross_origin
 $stdout.sync = true
-
 
 STORE = SSLTool::CertificateStore.new ENV['DATABASE_URL']
 STORE.on_circular_chain_detection do |circular_chains|

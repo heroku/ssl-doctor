@@ -1,10 +1,11 @@
 source "https://rubygems.org"
 
-ruby '2.3.0'
+ruby '2.3.3'
 
 gem 'puma'
 gem 'rack-ssl'
 gem 'sinatra'
+gem "sinatra-cross_origin", "~> 0.3.1"
 gem 'rollbar'
 gem 'rollbar-blanket'
 gem 'ssltool' #, path:"#{ENV['HOME']}/src/ssltool"
