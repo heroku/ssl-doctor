@@ -1,3 +1,8 @@
+PATH
+  remote: vendor/cache
+  specs:
+    rollbar-blanket (0.1.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -15,7 +20,6 @@ GEM
     redis (3.3.2)
     rollbar (2.13.3)
       multi_json
-    rollbar-blanket (0.1.2)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
@@ -49,7 +53,7 @@ DEPENDENCIES
   rack-test
   redis
   rollbar
-  rollbar-blanket
+  rollbar-blanket (= 0.1.8)!
   rspec
   sequel
   sinatra
