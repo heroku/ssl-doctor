@@ -1,3 +1,10 @@
+GIT
+  remote: git@github.com:heroku/rollbar-blanket.git
+  revision: 92e9228a03a3df9c82115a502726e4cd6b309787
+  tag: v0.1.8
+  specs:
+    rollbar-blanket (0.1.8)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -15,7 +22,6 @@ GEM
     redis (3.3.2)
     rollbar (2.13.3)
       multi_json
-    rollbar-blanket (0.1.2)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
@@ -49,7 +55,7 @@ DEPENDENCIES
   rack-test
   redis
   rollbar
-  rollbar-blanket
+  rollbar-blanket (= 0.1.8)!
   rspec
   sequel
   sinatra
