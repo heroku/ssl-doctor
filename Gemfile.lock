@@ -1,9 +1,7 @@
-GIT
-  remote: git@github.com:heroku/rollbar-blanket.git
-  revision: 92e9228a03a3df9c82115a502726e4cd6b309787
-  tag: v0.1.8
+PATH
+  remote: vendor/cache
   specs:
-    rollbar-blanket (0.1.8)
+    rollbar-blanket (0.1.2)
 
 GEM
   remote: https://rubygems.org/
