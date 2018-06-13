@@ -7,7 +7,11 @@ gem 'rack-ssl'
 gem 'sinatra'
 gem "sinatra-cross_origin", "~> 0.3.1"
 gem 'rollbar'
-gem 'rollbar-blanket', '0.1.2', path: 'vendor/cache'
+
+source "https://packagecloud.io/heroku/gemgate/" do
+  gem 'rollbar-blanket', '0.1.8'
+end
+
 gem 'ssltool' #, path:"#{ENV['HOME']}/src/ssltool"
 gem 'sequel'
 gem 'pg'
