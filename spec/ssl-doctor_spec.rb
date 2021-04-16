@@ -1,10 +1,10 @@
-ENV['RACK_ENV'] = 'test'
+ENV["RACK_ENV"] = "test"
 
-require 'ssl-doctor'
-require 'rspec'
-require 'rack/test'
+require "ssl-doctor"
+require "rspec"
+require "rack/test"
 
-describe 'SSL-Doctor' do
+describe "SSL-Doctor" do
   include Rack::Test::Methods
 
   def app
@@ -12,8 +12,8 @@ describe 'SSL-Doctor' do
   end
 
   it "return usage info" do
-    get '/'
+    get "/"
     expect(last_response).to be_ok
-    expect(last_response.body).to include('Always POST plain/text to the endpoints.')
+    expect(last_response.body).to include("Always POST plain/text to the endpoints.")
   end
 end
