@@ -21,4 +21,5 @@ gem "redis"
 group :test do
   gem "rack-test"
   gem "rspec"
+  gem "rspec_junit_formatter"
 end

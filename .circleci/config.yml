@@ -1,0 +1,120 @@
+---
+version: 2.1
+
+commands:
+  bundle_install:
+    description: "Install Gems via Bundler"
+    steps:
+      - run:
+          name: "Install Gems via Bundler"
+          command: |
+            bundle config set --local deployment "true"
+            bundle config set --local path "vendor/bundle"
+            bundle check || bundle install
+
+  install_dockerize_tooling:
+    description: "Install dockerize utility"
+    steps:
+      - run:
+          name: "Install dockerize utility"
+          command: |
+            DOCKERIZE_URL="https://circle-downloads.s3.amazonaws.com/circleci-images/cache/linux-amd64/dockerize-latest.tar.gz" \
+              && curl --silent --show-error --location --fail --retry 3 --output /tmp/dockerize-linux-amd64.tar.gz $DOCKERIZE_URL \
+              && tar -C /usr/local/bin -xzvf /tmp/dockerize-linux-amd64.tar.gz \
+              && rm -rf /tmp/dockerize-linux-amd64.tar.gz \
+              && dockerize --version
+
+  update_rubygems_and_bundler:
+    description: "Install latest Bundler/Update RubyGems"
+    steps:
+      - run:
+          name: "Install latest Bundler/Update RubyGems"
+          command: |
+            gem update --system
+            gem install bundler
+
+references:
+  default_env_vars: &default_env_vars
+    RACK_ENV: "test"
+    DATABASE_URL: "postgres://localhost/ssl-doctor-test"
+    REDIS_URL: "redis://:@localhost:6379/1"
+
+  default_docker_ruby_executor: &default_docker_ruby_executor
+    image: ruby:2.6.6
+    environment:
+      PGHOST: 127.0.0.1
+      PGUSER: ssl-doctor-ci-test
+      RAILS_ENV: test
+
+  postgres: &postgres
+    image: postgres:10.4
+    environment:
+      POSTGRES_DB: ssl-doctor-test
+      POSTGRES_USER: ssl-doctor-ci-test
+      POSTGRES_PASSWORD: "83kfi8886jqtj08691lab92ba9vs8z1w" # Postgres is configured for trusted local connections; we don't use this password, but now it's not default
+
+  redis: &redis
+    image: redis:4
+
+  gem_cache_key: &gem_cache_key
+    gem-cache-v1-{{ arch }}-{{ checksum "Gemfile.lock" }}
+
+  restore_gems: &restore_gems
+    restore_cache:
+      keys:
+        - *gem_cache_key
+        - gem-cache-v1-{{ arch }}
+
+jobs:
+  test:
+    working_directory: ~/repo
+
+    environment:
+      <<: *default_env_vars
+
+    docker:
+      - *default_docker_ruby_executor
+      - *postgres
+      - *redis
+
+    steps:
+      - install_dockerize_tooling
+      - checkout
+      - update_rubygems_and_bundler
+
+      - *restore_gems
+      - bundle_install
+      - save_cache:
+          key: *gem_cache_key
+          paths:
+            - vendor/bundle
+
+      - run:
+          name: "Wait for DB"
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      - run:
+          name: "Run tests in parallel"
+          command: |
+            mkdir -p tmp/test-results/rspec
+            TESTFILES=$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+            echo ${TESTFILES}
+
+            bundle exec rspec --color --tty --profile 10 \
+                                            --format progress \
+                                            --format RspecJunitFormatter \
+                                            --out tmp/test-results/rspec/rspec.xml \
+                                            ${TESTFILES}
+
+      - store_test_results:
+          path: tmp/test-results
+      - store_artifacts:
+          path: tmp/test-results
+          destination: test-results
+
+workflows:
+  version: 2
+
+  ci-pipeline:
+    jobs:
+      - test
