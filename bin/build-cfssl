@@ -14,13 +14,16 @@ hash git &>/dev/null                  || (echo "git binary not present or not in
 
 rm -rf tmp vendor/cfssl
 mkdir -p vendor/cfssl/bin tmp/go
+
 export GOPATH=`pwd`/tmp/go
+export GO111MODULE=auto
 url=github.com/cloudflare/cfssl
-go get -d $url
+
+go get -d $url/cmd/cfssl
 gox \
   -osarch "`go env GOHOSTOS`/`go env GOHOSTARCH` linux/amd64" \
   -output="vendor/cfssl/bin/{{.Dir}}.{{.OS}}_{{.Arch}}" \
-  github.com/cloudflare/cfssl
+  github.com/cloudflare/cfssl/cmd/cfssl
 
 cp $GOPATH/src/github.com/cloudflare/cfssl/LICENSE vendor/cfssl/
 
