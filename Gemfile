@@ -1,8 +1,8 @@
 source "https://rubygems.org"
 
-ruby "2.6.6"
+ruby "2.7.3"
 
-gem "puma"
+gem "puma", "~> 4.3.8"
 gem "rack-ssl"
 gem "sinatra"
 gem "sinatra-cross_origin", "~> 0.3.1"
