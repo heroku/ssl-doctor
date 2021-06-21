@@ -40,7 +40,7 @@ references:
     REDIS_URL: "redis://:@localhost:6379/1"
 
   default_docker_ruby_executor: &default_docker_ruby_executor
-    image: ruby:2.6.6
+    image: ruby:2.7.3
     environment:
       PGHOST: 127.0.0.1
       PGUSER: ssl-doctor-ci-test
